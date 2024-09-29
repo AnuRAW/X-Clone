@@ -8,7 +8,7 @@ import { useEffect } from "react";
 const Posts = ({ feedType }) => {
      const getPostEndPoint =()=>{
 		switch(feedType){
-			case "foryou":
+			case "forYou":
 				return "/api/posts/all";
 			case "following":
 				return "/api/posts/following";
@@ -22,8 +22,13 @@ const Posts = ({ feedType }) => {
 		queryFn: async () => {
 			try {
 				
-				const res = await axios.get(POST_ENDPOINT);
-				return res.data;
+				const res = await fetch(POST_ENDPOINT);
+				const data = await res.json();
+				if(!res.ok){
+					throw new Error(data.error || "Something went wrong");
+				}
+				
+				return data;
 			} catch (error) {
 				throw new Error(error);
 			}
