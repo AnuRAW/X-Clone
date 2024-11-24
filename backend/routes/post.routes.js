@@ -1,7 +1,7 @@
 import express from "express";
 import { protectRoute } from "../middleware/protectRoute.js";
 import { commentOnPost, createPost, deletePost, getAllPosts, getFollowingPosts, getLikePosts, likeUnlikePost, getUserPosts } from "../controllers/post.controller.js";
-import { get } from "mongoose";
+
 
 const router = express.Router();
 

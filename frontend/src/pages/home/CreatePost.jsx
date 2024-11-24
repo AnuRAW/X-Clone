@@ -23,7 +23,6 @@ import toast from "react-hot-toast";
 					body: JSON.stringify({ text, img }),
 				});
 				const data = await res.json();
-
 				if (!res.ok) {
 					throw new Error(data.error || "Something went wrong");
 				}
@@ -39,9 +38,6 @@ import toast from "react-hot-toast";
 			queryClient.invalidateQueries({ queryKey: ["posts"] });
 		},
 	});
-	
-
-
 	
 	const handleSubmit = (e) => {
 		e.preventDefault();
