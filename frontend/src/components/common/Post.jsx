@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 import LoadingSpinner from "./LoadingSpinner";
-import { formatPostDate } from "../../utils/date";
+import { formatPostDate } from "../../utils/db/date";
 
 const Post = ({ post }) => {
 	const [comment, setComment] = useState("");
@@ -18,7 +18,7 @@ const Post = ({ post }) => {
 	const postOwner = post.user;
 	const isLiked = post.likes.includes(authUser._id);
 
-	const isMyPost = authUser._id === post.user._id;
+	const isMyPost = authUser?._id === post?.user?._id;
 
 	const formattedDate = formatPostDate(post.createdAt);
 
@@ -127,18 +127,18 @@ const Post = ({ post }) => {
 		<>
 			<div className='flex gap-2 items-start p-4 border-b border-gray-700'>
 				<div className='avatar'>
-					<Link to={`/profile/${postOwner.username}`} className='w-8 rounded-full overflow-hidden'>
-						<img src={postOwner.profileImg || "/avatar-placeholder.png"} />
+				<Link to={`/profile/${postOwner?.username || ''}`} className='w-8 rounded-full overflow-hidden'>
+						<img src={postOwner?.profileImg || "/avatar-placeholder.png"} alt="Profile" />
 					</Link>
 				</div>
 				<div className='flex flex-col flex-1'>
 					<div className='flex gap-2 items-center'>
-						<Link to={`/profile/${postOwner.username}`} className='font-bold'>
-							{postOwner.fullName}
-						</Link>
-						<span className='text-gray-700 flex gap-1 text-sm'>
-							<Link to={`/profile/${postOwner.username}`}>@{postOwner.username}</Link>
-							<span>·</span>
+					<Link to={`/profile/${postOwner?.username || ''}`} className='font-bold'>
+						{postOwner?.fullName || 'Unknown User'}
+					</Link>
+                           <span className='text-gray-700 flex gap-1 text-sm'>
+						<Link to={`/profile/${postOwner?.username || ''}`}>@{postOwner?.username || 'unknown'}</Link>
+						<span>·</span>
 							<span>{formattedDate}</span>
 						</span>
 						{isMyPost && (
@@ -182,20 +182,21 @@ const Post = ({ post }) => {
 												No comments yet 🤔 Be the first one 😉
 											</p>
 										)}
-										{post.comments.map((comment) => (
-											<div key={comment._id} className='flex gap-2 items-start'>
-												<div className='avatar'>
+										{post?.comments.map((comment) => (
+ 											<div key={comment._id} className='flex gap-2 items-start'>
+ 												<div className='avatar'>
 													<div className='w-8 rounded-full'>
 														<img
-															src={comment.user.profileImg || "/avatar-placeholder.png"}
+															src={(comment.user && comment.user.profileImg) || "/avatar-placeholder.png"}
+															alt="User avatar"
 														/>
 													</div>
 												</div>
 												<div className='flex flex-col'>
 													<div className='flex items-center gap-1'>
-														<span className='font-bold'>{comment.user.fullName}</span>
+														<span className='font-bold'>{(comment.user && comment.user.fullName) || 'Unknown User'}</span>
 														<span className='text-gray-700 text-sm'>
-															@{comment.user.username}
+															@{(comment.user && comment.user.username) || 'unknown'}
 														</span>
 													</div>
 													<div className='text-sm'>{comment.text}</div>
