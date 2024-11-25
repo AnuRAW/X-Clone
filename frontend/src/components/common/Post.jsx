@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 import LoadingSpinner from "./LoadingSpinner";
-import { formatPostDate } from "../../utils/db/date/index";
+import { formatPostDate } from "../../utils/date";
 
 const Post = ({ post }) => {
 	const [comment, setComment] = useState("");
@@ -25,7 +25,7 @@ const Post = ({ post }) => {
 	const { mutate: deletePost, isPending: isDeleting } = useMutation({
 		mutationFn: async () => {
 			try {
-				const res = await fetch(`/api/posts/${post._id}`, {
+				const res = await fetch(`/api/posts/${post?._id}`, {
 					method: "DELETE",
 				});
 				const data = await res.json();
@@ -127,18 +127,18 @@ const Post = ({ post }) => {
 		<>
 			<div className='flex gap-2 items-start p-4 border-b border-gray-700'>
 				<div className='avatar'>
-				<Link to={`/profile/${postOwner?.username || ''}`} className='w-8 rounded-full overflow-hidden'>
-						<img src={postOwner?.profileImg || "/avatar-placeholder.png"} alt="Profile" />
+					<Link to={`/profile/${postOwner?.username}`} className='w-8 rounded-full overflow-hidden'>
+						<img src={postOwner?.profileImg || "/avatar-placeholder.png"} />
 					</Link>
 				</div>
 				<div className='flex flex-col flex-1'>
 					<div className='flex gap-2 items-center'>
-					<Link to={`/profile/${postOwner?.username || ''}`} className='font-bold'>
-						{postOwner?.fullName || 'Unknown User'}
-					</Link>
-                           <span className='text-gray-700 flex gap-1 text-sm'>
-						<Link to={`/profile/${postOwner?.username || ''}`}>@{postOwner?.username || 'unknown'}</Link>
-						<span>·</span>
+						<Link to={`/profile/${postOwner?.username}`} className='font-bold'>
+							{postOwner?.fullName}
+						</Link>
+						<span className='text-gray-700 flex gap-1 text-sm'>
+							<Link to={`/profile/${postOwner?.username}`}>@{postOwner?.username}</Link>
+							<span>·</span>
 							<span>{formattedDate}</span>
 						</span>
 						{isMyPost && (
@@ -165,11 +165,11 @@ const Post = ({ post }) => {
 						<div className='flex gap-4 items-center w-2/3 justify-between'>
 							<div
 								className='flex gap-1 items-center cursor-pointer group'
-								onClick={() => document.getElementById("comments_modal" + post._id).showModal()}
+								onClick={() => document.getElementById("comments_modal" + post?._id).showModal()}
 							>
 								<FaRegComment className='w-4 h-4  text-slate-500 group-hover:text-sky-400' />
 								<span className='text-sm text-slate-500 group-hover:text-sky-400'>
-									{post.comments.length}
+									{post?.comments.length}
 								</span>
 							</div>
 							{/* We're using Modal Component from DaisyUI */}
@@ -183,20 +183,19 @@ const Post = ({ post }) => {
 											</p>
 										)}
 										{post?.comments.map((comment) => (
- 											<div key={comment._id} className='flex gap-2 items-start'>
- 												<div className='avatar'>
+											<div key={comment._id} className='flex gap-2 items-start'>
+												<div className='avatar'>
 													<div className='w-8 rounded-full'>
 														<img
-															src={(comment.user && comment.user.profileImg) || "/avatar-placeholder.png"}
-															alt="User avatar"
+															src={comment.user.profileImg || "/avatar-placeholder.png"}
 														/>
 													</div>
 												</div>
 												<div className='flex flex-col'>
 													<div className='flex items-center gap-1'>
-														<span className='font-bold'>{(comment.user && comment.user.fullName) || 'Unknown User'}</span>
+														<span className='font-bold'>{comment.user.fullName}</span>
 														<span className='text-gray-700 text-sm'>
-															@{(comment.user && comment.user.username) || 'unknown'}
+															@{comment.user.username}
 														</span>
 													</div>
 													<div className='text-sm'>{comment.text}</div>
