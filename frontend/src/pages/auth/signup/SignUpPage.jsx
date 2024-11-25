@@ -88,7 +88,7 @@ const SignUpPage = () => {
 								placeholder='Username'
 								name='username'
 								onChange={handleInputChange}
-								value={formData.username}
+								value={formData?.username}
 							/>
 						</label>
 						<label className='input input-bordered rounded flex items-center gap-2 flex-1'>
@@ -99,7 +99,7 @@ const SignUpPage = () => {
 								placeholder='Full Name'
 								name='fullName'
 								onChange={handleInputChange}
-								value={formData.fullName}
+								value={formData?.fullName}
 							/>
 						</label>
 					</div>
@@ -111,7 +111,7 @@ const SignUpPage = () => {
 							placeholder='Password'
 							name='password'
 							onChange={handleInputChange}
-							value={formData.password}
+							value={formData?.password}
 						/>
 					</label>
 					<button className='btn rounded-full btn-primary text-white'>
